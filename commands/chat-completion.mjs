@@ -11,9 +11,8 @@ const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
 // openaiClient.timeout = 30000; // sets timeout to 30 seconds
 openai.apiKey = process.env.OPENAI_API_KEY;
 
-async function clearMessages() {
-  const dataFilePath =
-    "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
+async function clearMessages(dataFilePath) {
+  
   return fs.writeFileSync(dataFilePath, JSON.stringify({ messages: [] }));
 }
 async function addMessage(newMessage) {

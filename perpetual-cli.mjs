@@ -46,6 +46,10 @@ async function askQuestion() {
       const command = words.join(" "); // join remaining words back into a string
       await runCommand(command);
       askQuestion();
+    } else if (answer.toLowerCase().startsWith("code")) {
+      
+      await analyzeCodeCmd("commands/chat-completion.mjs");
+      askQuestion();
     } else if (answer.toLowerCase().startsWith("analyzecode")) {
       const words = answer.split(" ");
       words.shift(); // remove the first word
