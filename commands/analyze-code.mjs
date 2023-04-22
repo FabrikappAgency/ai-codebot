@@ -14,8 +14,7 @@ openai.apiKey = process.env.OPENAI_API_KEY;
 
 async function analyzeCode(path) {
   const codeFilePath = `/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/${path}`;
-  const dataFilePath =
-    "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
+  const dataFilePath = "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
 
   //   const newMessage = "Hello, world!";
   await clearMessages(dataFilePath);
@@ -48,9 +47,9 @@ async function getFileContent(path) {
   return new Promise((resolve, reject) => {
     // Read the contents of the JSON file
     fs.readFile(path, "utf8", (err, data) => {
-      if (err) reject(err);
+      // if (err) reject(err);
 
-      console.log(data);
+      // console.log(data);
       resolve(data);
     });
   });

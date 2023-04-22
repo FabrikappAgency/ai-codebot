@@ -68,8 +68,7 @@ async function chatCompletion(prompt, context, modelId) {
   //   messages = [...messages];
   // }
   console.log("Prompting model...");
-  const completion = await openaiClient.chatCompletions
-    .create({
+  const completion = await openaiClient.chatCompletions.create({
       // engine: "gpt-3.5-turbo",
       // max_tokens: 2048,
 
