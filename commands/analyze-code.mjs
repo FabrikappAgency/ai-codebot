@@ -12,17 +12,23 @@ const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
 
 openai.apiKey = process.env.OPENAI_API_KEY;
 
-async function analyzeCode(path) {
+async function analyzeCode(path, prompt = "no specific requirements") {
   const codeFilePath = `/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/${path}`;
-  const dataFilePath = "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
+  const dataFilePath =
+    "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
 
   await clearMessages(dataFilePath);
 
   const code = await getFileContent(codeFilePath);
-  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}`;
+  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}. You can update the code to implement the following requirements:${prompt}`;
 
-  const summary = await chatCompletion("Return a summary of the changes you've made in bullet point with return char.", context);
-  const analyze = await chatCompletion("Return a sentence giving your a summary of your improvments..");
+  const summary = await chatCompletion(
+    "Return a summary of the changes you've made in bullet point with return char.",
+    context
+  );
+  const analyze = await chatCompletion(
+    "Return a sentence giving your a summary of your improvments.."
+  );
 
   console.log("summary", summary);
   console.log("analyze", analyze);
@@ -32,9 +38,11 @@ async function analyzeCode(path) {
   );
   const formattedCode = clearCodeOutput(updatedCode);
   console.log("updatedCode", updatedCode);
-  await writeFileContent(codeFilePath, formattedCode).catch((err) => {
-    console.log('errorwriteFileContent', err);
-  });
+  if (formattedCode !== "") {
+    await writeFileContent(codeFilePath, formattedCode).catch((err) => {
+      console.log("errorwriteFileContent", err);
+    });
+  }
   return summary;
 }
 
@@ -58,6 +66,7 @@ function clearCodeOutput(code) {
     console.log(content);
     return content;
   }
+  return "";
 }
 async function writeFileContent(path, data) {
   return new Promise((resolve, reject) => {

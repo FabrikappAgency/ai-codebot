@@ -12,15 +12,17 @@ async function fetchData(query) {
   console.log(chalk.green(`Fetched data for query: ${query}`));
   console.log(result);
 }
-async function analyzeCodeCmd(query) {
-  const spinner = ora(`Analyze code for page ${query}`).start();
+async function analyzeCodeCmd(path, prompt = "") {
+  const spinner = ora(
+    `Analyze code for page ${path} with prompt ${prompt}`
+  ).start();
 
-  const result = await analyzeCode(query).catch((err) => {
+  const result = await analyzeCode(path, prompt).catch((err) => {
     spinner.stop();
     return;
   });
   spinner.stop();
-  console.log(chalk.green(`Analyze code for page : ${query} done.`));
+  console.log(chalk.green(`Analyze code for page : ${path} done.`));
   console.log(result);
 }
 
@@ -47,14 +49,15 @@ async function askQuestion() {
       await runCommand(command);
       askQuestion();
     } else if (answer.toLowerCase().startsWith("code")) {
-      
       await analyzeCodeCmd("commands/child_process.mjs");
       askQuestion();
     } else if (answer.toLowerCase().startsWith("analyzecode")) {
       const words = answer.split(" ");
       words.shift(); // remove the first word
-      const command = words.join(" "); // join remaining words back into a string
-      await analyzeCodeCmd(command);
+      const path = words[0];
+      words.shift(); // remove the first word
+      const prompt = words.join(" ");
+      await analyzeCodeCmd(path, prompt);
       askQuestion();
     } else {
       await fetchData(answer);
