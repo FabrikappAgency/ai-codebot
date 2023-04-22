@@ -12,7 +12,7 @@ async function fetchData(query) {
   console.log(chalk.green(`Fetched data for query: ${query}`));
   console.log(result);
 }
-async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {) {
+async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {
   const spinner = ora(
     `Analyze code for page ${path} with prompt ${prompt}`
   ).start();
