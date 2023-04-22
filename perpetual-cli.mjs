@@ -48,7 +48,7 @@ async function askQuestion() {
       askQuestion();
     } else if (answer.toLowerCase().startsWith("code")) {
       
-      await analyzeCodeCmd("commands/chat-completion.mjs");
+      await analyzeCodeCmd("commands/child_process.mjs");
       askQuestion();
     } else if (answer.toLowerCase().startsWith("analyzecode")) {
       const words = answer.split(" ");

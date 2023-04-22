@@ -51,36 +51,36 @@ async function getMessages() {
 async function chatCompletion(prompt, context, modelId) {
   const messageContext = {
     role: "system",
-    content:
-      context ??
-      "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
+    content: context ?? "You are a software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:",
+    // "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
   };
   const addMessageContext = context ?? false;
 
   // const prompt = `${prompt}`;
-  if (addMessageContext) {
+  if (context) {
     await addMessage(messageContext);
   }
-  let messages = await addMessage({ role: "user", content: prompt });
+  const messages = await addMessage({ role: "user", content: prompt });
   // if (addMessageContext) {
   //   messages = [...messages, messageContext];
   // } else {
   //   messages = [...messages];
   // }
   console.log("Prompting model...");
-  const completion = await openaiClient.chatCompletions.create({
+  const completion = await openaiClient.chatCompletions
+    .create({
       // engine: "gpt-3.5-turbo",
       // max_tokens: 2048,
 
       model: "gpt-3.5-turbo",
       messages: messages,
-      max_tokens: 4000,
+      max_tokens: 2000,
       n: 1,
       stop: null,
       temperature: 0.7,
     })
     .catch((err) => {
-      console.log(err.data);
+      console.error('error', err.data);
     });
   const reply = completion.data.choices[0].message.content.trim();
   await addMessage({ role: "assistant", content: reply });
