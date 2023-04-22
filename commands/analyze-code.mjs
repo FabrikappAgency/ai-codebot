@@ -12,7 +12,7 @@ const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
 
 openai.apiKey = process.env.OPENAI_API_KEY;
 
-async function analyzeCode(path, prompt = "no specific requirements") {
+async function analyzeCode(path, prompt = "no specific requirements", replaceCode = false) {
   const codeFilePath = `/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/${path}`;
   const dataFilePath =
     "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
@@ -38,7 +38,7 @@ async function analyzeCode(path, prompt = "no specific requirements") {
   );
   const formattedCode = clearCodeOutput(updatedCode);
   console.log("updatedCode", updatedCode);
-  if (formattedCode !== "") {
+  if (formattedCode !== "" && replaceCode === true) {
     await writeFileContent(codeFilePath, formattedCode).catch((err) => {
       console.log("errorwriteFileContent", err);
     });

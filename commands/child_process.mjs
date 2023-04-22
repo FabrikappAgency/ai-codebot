@@ -5,15 +5,21 @@ import { exec } from "child_process";
  * @param {string} command - The command to run in the shell.
  * @returns {Promise<string>} - The output of the command as a string.
  */
-async function runCommand(command) {
-  try {
-    const { stdout, stderr } = await exec(command || "ls");
-    if (stderr) console.log(`Stderr: ${stderr}`);
-    return stdout.trim();
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
-    throw error;
-  }
-}
 
+async function runCommand(command) {
+  return new Promise((resolve, reject) => {
+    exec(command || "ls", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`Stderr: ${stderr}`);
+        return;
+      }
+      console.log(`Stdout: ${stdout}`);
+      resolve(stdout);
+    });
+  });
+}
 export { runCommand };
