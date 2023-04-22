@@ -1,27 +1,39 @@
 import fs from 'fs';
 import path from 'path';
+import JSONStream from 'JSONStream';
 
-async function jsonToJSONL(filePath) {
-  const inputPath = path.resolve(filePath);
+async function convertJsonToJsonl(inputFilePath) {
+  const inputPath = path.resolve(inputFilePath);
   const outputPath = inputPath.replace(/\.json$/, '.jsonl');
 
-  try {
-    const data = await fs.promises.readFile(inputPath, 'utf8');
-    const jsonArray = JSON.parse(data);
-    const jsonlLines = jsonArray.map(jsonObj => JSON.stringify(jsonObj)).join('\n');
-
-    await fs.promises.writeFile(outputPath, jsonlLines, 'utf8');
-    console.log(`JSONL file created: ${outputPath}`);
-  } catch (err) {
-    console.error(`Error: ${err}`);
+  if (!fs.existsSync(inputPath)) {
+    console.error('Error: input file does not exist');
+    process.exit(1);
   }
+
+  const jsonStream = fs.createReadStream(inputPath).pipe(JSONStream.stringify());
+  const outputStream = fs.createWriteStream(outputPath, { encoding: 'utf8' });
+
+  jsonStream.on('error', err => {
+    console.error(`Error: ${err}`);
+  });
+
+  outputStream.on('error', err => {
+    console.error(`Error: ${err}`);
+  });
+
+  outputStream.on('finish', () => {
+    console.log(`JSONL file created: ${outputPath}`);
+  });
+
+  jsonStream.pipe(outputStream);
 }
 
 const [, , inputFile] = process.argv;
 
 if (!inputFile) {
-  console.error('Usage: node json_to_jsonl.mjs <input_file>');
+  console.error('Usage: node convert-json-to-jsonl.js <input_file>');
   process.exit(1);
 }
 
-jsonToJSONL(inputFile);
+convertJsonToJsonl(inputFile);
