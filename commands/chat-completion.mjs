@@ -45,13 +45,13 @@ async function getMessages() {
   });
 }
 
-async function chatCompletion(prompt, modelId) {
+async function chatCompletion(prompt, context, modelId) {
   const messageContext = {
     role: "system",
     content:
-      "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence.",
+      context ?? "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
   };
-  const addMessageContext = false;
+  const addMessageContext = true;
   
   // const prompt = `${prompt}`;
   let messages = await addMessage({ role: "user", content: prompt });
@@ -65,10 +65,12 @@ async function chatCompletion(prompt, modelId) {
     // engine: "gpt-3.5-turbo",
     model: "gpt-3.5-turbo",
     messages: messages,
-    max_tokens: 200,
+    max_tokens: 2048,
     n: 1,
     stop: null,
     temperature: 0.7,
+  }).catch((err) => {
+    console.log(err.data);
   });
   const reply = completion.data.choices[0].message.content.trim();
   await addMessage({ role: "assistant", content: reply });
