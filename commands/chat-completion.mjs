@@ -12,7 +12,6 @@ const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
 openai.apiKey = process.env.OPENAI_API_KEY;
 
 async function clearMessages(dataFilePath) {
-  
   return fs.writeFileSync(dataFilePath, JSON.stringify({ messages: [] }));
 }
 async function addMessage(newMessage) {
@@ -72,9 +71,11 @@ async function chatCompletion(prompt, context, modelId) {
   const completion = await openaiClient.chatCompletions
     .create({
       // engine: "gpt-3.5-turbo",
+      // max_tokens: 2048,
+
       model: "gpt-3.5-turbo",
       messages: messages,
-      max_tokens: 2048,
+      max_tokens: 4000,
       n: 1,
       stop: null,
       temperature: 0.7,
