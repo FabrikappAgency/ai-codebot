@@ -54,12 +54,15 @@ async function chatCompletion(prompt, context, modelId) {
   const addMessageContext = true;
   
   // const prompt = `${prompt}`;
-  let messages = await addMessage({ role: "user", content: prompt });
-  if (addMessageContext) {
-    messages = [...messages, messageContext];
-  } else {
-    messages = [...messages];
+  if(addMessageContext) {
+    await addMessage(messageContext);
   }
+  let messages = await addMessage({ role: "user", content: prompt });
+  // if (addMessageContext) {
+  //   messages = [...messages, messageContext];
+  // } else {
+  //   messages = [...messages];
+  // }
   console.log("Prompting model...");
   const completion = await openaiClient.chatCompletions.create({
     // engine: "gpt-3.5-turbo",
