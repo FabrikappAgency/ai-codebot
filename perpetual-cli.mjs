@@ -51,7 +51,7 @@ async function askQuestion() {
     } else if (answer.toLowerCase().startsWith("code")) {
       await analyzeCodeCmd("commands/child_process.mjs");
       askQuestion();
-    } else if (answer.toLowerCase().startsWith("codefix")) {
+    } else if (answer.toLowerCase().startsWith("fixcode")) {
       const words = answer.split(" ");
       words.shift(); // remove the first word
       const path = words[0];

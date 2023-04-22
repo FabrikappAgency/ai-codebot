@@ -24,10 +24,10 @@ async function analyzeCode(
 
   await clearMessages(dataFilePath);
   console.log(chalk.green(`Starting analysis of ${path}`));
+  console.log(chalk.green(`Replacing code of ${replaceCode}`));
 
   const code = await getFileContent(codeFilePath);
-  
-  
+
   const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}. You can update the code to implement the following requirements:${prompt}`;
 
   const summary = await chatCompletion(
@@ -43,7 +43,6 @@ async function analyzeCode(
       "Apply this improvments to the code and return the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contains the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code."
     );
     const formattedCode = clearCodeOutput(updatedCode);
-    console.log("updatedCode", updatedCode);
     if (formattedCode !== "" && replaceCode === true) {
       await writeFileContent(codeFilePath, formattedCode).catch((err) => {
         console.log("errorwriteFileContent", err);
@@ -51,12 +50,10 @@ async function analyzeCode(
     }
   }
 
-
-
-  const analyze = await chatCompletion(
-    "Return a sentence giving your a summary of your improvments."
-  );
-  console.log(chalk.green(`Summary : ${analyze}`));
+  // const analyze = await chatCompletion(
+  //   "Return a sentence giving your a summary of your improvments."
+  // );
+  // console.log(chalk.green(`Summary : ${analyze}`));
 
   // console.log("analyze", analyze);
 
@@ -75,19 +72,25 @@ async function getFileContent(path) {
 }
 
 function clearCodeOutput(code) {
-  const regex = /```(?<word>\w+)\n(?<content>[\s\S]*?)\n```/gm;
+  const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/gm;
 
-  let match;
-  while ((match = regex.exec(code)) !== null) {
-    const content = match.groups.content;
-    console.log(content);
-    return content;
+  try {
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+      const content = match.groups.content;
+      console.log(content);
+      return content;
+    }
+    return "";
+  } catch (error) {
+    console.error("An error occurred while clearing code output:", error);
+    return "";
   }
-  return "";
 }
+
 async function writeFileContent(path, data) {
   return new Promise((resolve, reject) => {
-    fs.writeFileSync(path, data, "utf8", (err) => {
+    fs.writeFile(path, data, "utf8", (err) => {
       if (err) reject(err);
       console.log("The file was saved!");
       resolve(true);
