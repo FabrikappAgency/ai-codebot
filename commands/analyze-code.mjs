@@ -27,6 +27,12 @@ async function analyzeCode(path) {
   console.log("summary", summary);
   console.log("analyze", analyze);
 
+  const updatedCode = await chatCompletion(
+    "Apply this improvments to the code and return the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contains the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code."
+  );
+  const formattedCode = clearCodeOutput(updatedCode);
+  console.log("updatedCode", updatedCode);
+  await writeFileContent(codeFilePath, formattedCode);
   return summary;
 }
 
@@ -41,6 +47,16 @@ async function getFileContent(path) {
   });
 }
 
+function clearCodeOutput(code) {
+  const regex = /```(?<word>\w+)\n(?<content>[\s\S]*?)\n```/gm;
+
+  let match;
+  while ((match = regex.exec(code)) !== null) {
+    const content = match.groups.content;
+    console.log(content);
+    return content;
+  }
+}
 async function writeFileContent(path, data) {
   return new Promise((resolve, reject) => {
     fs.writeFileSync(path, data, "utf8", (err) => {
