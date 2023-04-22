@@ -32,7 +32,9 @@ async function analyzeCode(path) {
   );
   const formattedCode = clearCodeOutput(updatedCode);
   console.log("updatedCode", updatedCode);
-  await writeFileContent(codeFilePath, formattedCode);
+  await writeFileContent(codeFilePath, formattedCode).catch((err) => {
+    console.log('errorwriteFileContent', err);
+  });
   return summary;
 }
 

@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@rometools/cli-darwin-arm64@12.0.0":
+  "integrity" "sha512-kEFCzU6cgy6vfY0mkMzq57ea3srqV5X2wyCAxjVfA2JF7fioq695uWhy7yOCBW+nUUFIz62N9v1nf/aYqX8XkA=="
+  "resolved" "https://registry.npmjs.org/@rometools/cli-darwin-arm64/-/cli-darwin-arm64-12.0.0.tgz"
+  "version" "12.0.0"
+
 "@tectalic/openai@^0.3.1":
   "integrity" "sha512-KRhxX4bN+KmYveEi0nKRdH8wUxlBKzwM2VfQnKktMFYdUKh+mwbBQ4TeEKYIqGRkFhbV3JEPz/r8hl2oiQcLzQ=="
   "resolved" "https://registry.npmjs.org/@tectalic/openai/-/openai-0.3.1.tgz"
@@ -434,6 +439,18 @@
   dependencies:
     "onetime" "^5.1.0"
     "signal-exit" "^3.0.2"
+
+"rome@12.0.0":
+  "integrity" "sha512-w/tLvLj5PGUCx3R+Kna08BMq4zL83Xzh9spvrqoWa3Nkzk16SkD8JSpyWWP9WhI2r3qv3Xvc7FnYZ4QDnjAiYg=="
+  "resolved" "https://registry.npmjs.org/rome/-/rome-12.0.0.tgz"
+  "version" "12.0.0"
+  optionalDependencies:
+    "@rometools/cli-darwin-arm64" "12.0.0"
+    "@rometools/cli-darwin-x64" "12.0.0"
+    "@rometools/cli-linux-arm64" "12.0.0"
+    "@rometools/cli-linux-x64" "12.0.0"
+    "@rometools/cli-win32-arm64" "12.0.0"
+    "@rometools/cli-win32-x64" "12.0.0"
 
 "run-async@^2.4.0":
   "integrity" "sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ=="

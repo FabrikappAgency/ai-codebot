@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
 yarn-error.log
-data
-models
+data/*
+models/*
 .env
