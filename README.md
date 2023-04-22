@@ -1,7 +1,7 @@
 <!-- analyzecode commands/analyze-code.mjs
 analyzecode commands/chat-completion.mjs -->
 
-# Project Title
+# AI Codebot : your personnal coding assistant
 
 This cli will use open AI to help you code.
 
