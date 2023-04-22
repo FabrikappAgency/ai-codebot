@@ -11,6 +11,11 @@ const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
 // openaiClient.timeout = 30000; // sets timeout to 30 seconds
 openai.apiKey = process.env.OPENAI_API_KEY;
 
+async function clearMessages() {
+  const dataFilePath =
+    "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
+  return fs.writeFileSync(dataFilePath, JSON.stringify({ messages: [] }));
+}
 async function addMessage(newMessage) {
   const dataFilePath =
     "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
@@ -49,12 +54,13 @@ async function chatCompletion(prompt, context, modelId) {
   const messageContext = {
     role: "system",
     content:
-      context ?? "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
+      context ??
+      "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
   };
   const addMessageContext = true;
-  
+
   // const prompt = `${prompt}`;
-  if(addMessageContext) {
+  if (addMessageContext) {
     await addMessage(messageContext);
   }
   let messages = await addMessage({ role: "user", content: prompt });
@@ -64,17 +70,19 @@ async function chatCompletion(prompt, context, modelId) {
   //   messages = [...messages];
   // }
   console.log("Prompting model...");
-  const completion = await openaiClient.chatCompletions.create({
-    // engine: "gpt-3.5-turbo",
-    model: "gpt-3.5-turbo",
-    messages: messages,
-    max_tokens: 2048,
-    n: 1,
-    stop: null,
-    temperature: 0.7,
-  }).catch((err) => {
-    console.log(err.data);
-  });
+  const completion = await openaiClient.chatCompletions
+    .create({
+      // engine: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo",
+      messages: messages,
+      max_tokens: 2048,
+      n: 1,
+      stop: null,
+      temperature: 0.7,
+    })
+    .catch((err) => {
+      console.log(err.data);
+    });
   const reply = completion.data.choices[0].message.content.trim();
   await addMessage({ role: "assistant", content: reply });
   //   console.log("Updated model with new content:", completion);
@@ -84,4 +92,4 @@ async function chatCompletion(prompt, context, modelId) {
 
 // ...
 
-export { chatCompletion };
+export { chatCompletion, clearMessages };
