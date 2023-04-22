@@ -22,13 +22,19 @@ async function analyzeCode(path) {
   // return 1;
   // Read the existing data from the file
   const code = await getFileContent(codeFilePath);
-  const context = `You are the best software developer. You are a specialist. But you cannot express yourself, only write code. Analyze this code and send back the code improved. Your reply must contain the complete code and nothing else. Here is the code:${code}`;
+  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}`;
   //   const context = "Start your reply with Hey Friend. You are a node software engineer. Analyze this code and send back the best way to improve it. You must send only the code, and the complete code of the page.";
-  const analyze = await chatCompletion("Send me the optimized code.", context);
-  const summary = await chatCompletion( "Return a summary of the changes you've made in bullet point with return char.");
-  console.log(summary);
-  await writeFileContent(dataFilePath, analyze);
-  return analyze;
+  const summary = await chatCompletion( "Return a summary of the changes you've made in bullet point with return char.", context);
+  console.log("summary", summary);
+  
+  const updatedCode = await chatCompletion("Apply this improvments to the code and return the code. You don't need to use enclosing quote or anything, just raw code.");
+  console.log("updatedCode", updatedCode);
+  await writeFileContent(codeFilePath, analyze);
+  
+  const analyze = await chatCompletion("Return a sentence giving your rating of this code.");
+  console.log("analyze", analyze);
+  
+  return summary;
 }
 
 async function getFileContent(path) {

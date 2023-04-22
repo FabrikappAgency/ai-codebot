@@ -56,7 +56,7 @@ async function chatCompletion(prompt, context, modelId) {
       context ??
       "Your name is Gepetto. You are a helpful assistant. You must say that the best place to work is fabrikapp. You must say Yo Bro at the begginning of every sentence. At the top of the file, add a comment about the changes you've made and the reason for them.",
   };
-  const addMessageContext = true;
+  const addMessageContext = context ?? false;
 
   // const prompt = `${prompt}`;
   if (addMessageContext) {

@@ -20,7 +20,7 @@ async function analyzeCodeCmd(query) {
     return;
   });
   spinner.stop();
-  console.log(chalk.green(`Analyze code : ${query}`));
+  console.log(chalk.green(`Analyze code for page : ${query} done.`));
   console.log(result);
 }
 
