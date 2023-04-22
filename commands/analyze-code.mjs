@@ -28,10 +28,10 @@ async function analyzeCode(
 
   const code = await getFileContent(codeFilePath);
 
-  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}. You can update the code to implement the following requirements:${prompt}`;
+  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}. `;
 
   const summary = await chatCompletion(
-    "Return a summary of the changes you've made in bullet point with return char.",
+    "Return a summary of the changes you've made in bullet point with return char." .concat(prompt ? `You can update the code to implement the following requirements:${prompt}` : ""),
     context
   );
 

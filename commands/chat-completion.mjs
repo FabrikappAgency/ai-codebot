@@ -48,7 +48,7 @@ async function getMessages() {
   });
 }
 
-async function chatCompletion(prompt, context, modelId) {
+async function chatCompletion(prompt, context = null, modelId = null) {
   const messageContext = {
     role: "system",
     content: context ?? "You are a software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:",
@@ -80,7 +80,10 @@ async function chatCompletion(prompt, context, modelId) {
       temperature: 0.7,
     })
     .catch((err) => {
-      console.error('error', err.data);
+      console.error('Error keys:', Object.keys(err));
+
+      console.error('error', err.response.data.error);
+      console.error('error', err.message);
     });
   const reply = completion.data.choices[0].message.content.trim();
   await addMessage({ role: "assistant", content: reply });

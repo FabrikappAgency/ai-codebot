@@ -1,5 +1,5 @@
 import { promptModel } from "./modelCommands.mjs";
-import { chatCompletion, runCommand, analyzeCode } from "./commands/index.mjs";
+import { chatCompletion, runCommand, analyzeCode, codeTask } from "./commands/index.mjs";
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
@@ -7,7 +7,12 @@ import inquirer from "inquirer";
 async function fetchData(query) {
   const spinner = ora("Fetching data...").start();
 
-  const result = await chatCompletion(query);
+  const result = await chatCompletion(query).catch((err) => {
+    console.log(chalk.red(`Error fetching data for query: ${query}`, err));
+
+    spinner.stop();
+    return;
+  });
   spinner.stop();
   console.log(chalk.green(`Fetched data for query: ${query}`));
   console.log(result);
@@ -23,6 +28,19 @@ async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {
   });
   spinner.stop();
   console.log(chalk.green(`Analyze code for page : ${path} done.`));
+  console.log(result);
+}
+async function codeTaskCmd(prompt = "", replaceCode = false) {
+  const spinner = ora(
+    `Code task with prompt ${prompt}`
+  ).start();
+
+  const result = await codeTask(prompt).catch((err) => {
+    spinner.stop();
+    return;
+  });
+  spinner.stop();
+  console.log(chalk.green(`Code task for ${prompt} done.`));
   console.log(result);
 }
 
@@ -58,6 +76,14 @@ async function askQuestion() {
       words.shift(); // remove the first word
       const prompt = words.join(" ");
       await analyzeCodeCmd(path, prompt, true);
+      askQuestion();
+    } else if (answer.toLowerCase().startsWith("task")) {
+      const words = answer.split(" ");
+      words.shift(); // remove the first word
+      const path = words[0];
+      words.shift(); // remove the first word
+      const prompt = words.join(" ");
+      await codeTaskCmd(path, prompt, true);
       askQuestion();
     } else if (answer.toLowerCase().startsWith("analyzecode")) {
       const words = answer.split(" ");
