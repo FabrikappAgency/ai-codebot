@@ -23,6 +23,7 @@ async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {
   ).start();
 
   const { summary, analyze } = await analyzeCode(path, prompt, replaceCode).catch((err) => {
+    console.log(chalk.red(`Error analyzing code for page : ${path}`, err));
     spinner.stop();
     return;
   });

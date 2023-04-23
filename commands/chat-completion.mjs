@@ -74,7 +74,7 @@ async function chatCompletion(prompt, context = null, modelId = null) {
 
       model: "gpt-3.5-turbo",
       messages: messages,
-      max_tokens: 2000,
+      max_tokens: 1000,
       n: 1,
       stop: null,
       temperature: 0.7,
@@ -82,10 +82,11 @@ async function chatCompletion(prompt, context = null, modelId = null) {
     .catch((err) => {
       console.error('Error keys:', Object.keys(err));
 
-      console.error('error', err.response);
-      console.error('error', err.response.data.error);
-      console.error('error', err.message);
+      console.error('error', err);
+      console.error('error message', err.response ? err.response?.data?.error: "no error message");
+      // console.error('error', err.message);
     });
+    if(!completion) return null;
   const reply = completion.data.choices[0].message.content.trim();
   await addMessage({ role: "assistant", content: reply });
   //   console.log("Updated model with new content:", completion);
