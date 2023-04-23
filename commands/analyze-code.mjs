@@ -17,7 +17,7 @@ async function analyzeCode(
   prompt = "no specific requirements",
   replaceCode = false
 ) {
-  const codeFilePath = `/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/${path}`;
+  const codeFilePath = `${process.env.PROJECT_ROOT}/${path}`;
   const dataFilePath = "./data/data.json";
 
   await clearMessages(dataFilePath);
@@ -36,11 +36,13 @@ async function analyzeCode(
   );
   console.log(chalk.green(`${analyze}`));
 
-  //   const summary = await chatCompletion(
-  //   "Return one sentence to describe the improvements you've just made."
-  // );
-  // console.log(chalk.green(`${summary}`));
-
+  /*  This add summary of the changes you've made in bullet point with return char. */
+  /*
+    const summary = await chatCompletion(
+    "Return one sentence to describe the improvements you've just made."
+  );
+  console.log(chalk.green(`${summary}`)); 
+  */
   if (replaceCode === true) {
     const updatedCode = await chatCompletion(
       `Apply this improvements to the code and return only the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contain the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code.`
@@ -52,7 +54,6 @@ async function analyzeCode(
       });
     }
   }
-
 
   const summary = "summary here";
   return { analyze, summary };
