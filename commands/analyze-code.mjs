@@ -6,6 +6,8 @@ import FormData from "form-data";
 import dotenv from "dotenv";
 import openaiPackage from "@tectalic/openai";
 import { chatCompletion, clearMessages } from "./index.mjs";
+import { getFileContent, writeFileContent, clearCodeOutput } from "../utils/utils.mjs";
+
 import chalk from "chalk";
 
 dotenv.config();
@@ -24,14 +26,18 @@ async function analyzeCode(
 
   await clearMessages(dataFilePath);
   console.log(chalk.green(`Starting analysis of ${path}`));
-  console.log(chalk.green(`Replacing code of ${replaceCode}`));
+  console.log(chalk.green(`Replacing code : ${replaceCode}`));
 
   const code = await getFileContent(codeFilePath);
 
   const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and improve it. Your reply must contain the complete code and nothing else. Here is the code:${code}. `;
 
   const summary = await chatCompletion(
-    "Return a summary of the changes you've made in bullet point with return char." .concat(prompt ? `You can update the code to implement the following requirements:${prompt}` : ""),
+    "Return a summary of the changes you've made in bullet point with return char.".concat(
+      prompt
+        ? `You can update the code to implement the following requirements:${prompt}`
+        : ""
+    ),
     context
   );
 
@@ -59,43 +65,4 @@ async function analyzeCode(
 
   return summary;
 }
-
-async function getFileContent(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, "utf8", (err, data) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(data);
-    });
-  });
-}
-
-function clearCodeOutput(code) {
-  const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/gm;
-
-  try {
-    let match;
-    while ((match = regex.exec(code)) !== null) {
-      const content = match.groups.content;
-      console.log(content);
-      return content;
-    }
-    return "";
-  } catch (error) {
-    console.error("An error occurred while clearing code output:", error);
-    return "";
-  }
-}
-
-async function writeFileContent(path, data) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(path, data, "utf8", (err) => {
-      if (err) reject(err);
-      console.log("The file was saved!");
-      resolve(true);
-    });
-  });
-}
-
 export { analyzeCode };

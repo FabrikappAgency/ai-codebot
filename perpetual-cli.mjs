@@ -83,7 +83,7 @@ async function askQuestion() {
       const path = words[0];
       words.shift(); // remove the first word
       const prompt = words.join(" ");
-      await codeTaskCmd(path, prompt, true);
+      await codeTaskCmd(prompt, true);
       askQuestion();
     } else if (answer.toLowerCase().startsWith("analyzecode")) {
       const words = answer.split(" ");

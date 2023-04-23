@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import openaiPackage from "@tectalic/openai";
 import { chatCompletion, clearMessages } from "./index.mjs";
 import chalk from "chalk";
+import { getFileContent } from "../utils/utils.mjs";
 
 dotenv.config();
 const openaiClient = openaiPackage.default(process.env.OPENAI_API_KEY);
@@ -16,13 +17,14 @@ async function codeTask(
   prompt = "no specific requirements",
   replaceCode = false
 ) {
-  const contextFilePath = "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/prompts/agent.txt";
+  const contextFilePath = "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/prompts/find_commands.txt";
   const dataFilePath = "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
 
   await clearMessages(dataFilePath);
-  
-  const context = await getFileContent(contextFilePath);
+  console.log("clearMessages", contextFilePath);
 
+  const context = await getFileContent(contextFilePath);
+console.log("context", context);
   const summary = await chatCompletion(prompt, context);
    
   console.log(chalk.green(`Changes : ${summary}`));
@@ -30,25 +32,7 @@ async function codeTask(
   return summary;
 }
 
-async function getFileContent(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, "utf8", (err, data) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(data);
-    });
-  });
-}
 
-async function writeFileContent(path, data) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(path, data, "utf8", (err) => {
-      if (err) reject(err);
-      console.log("The file was saved!");
-      resolve(true);
-    });
-  });
-}
+
 
 export { codeTask };
