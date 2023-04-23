@@ -46,9 +46,10 @@ async function analyzeCode(
 
   if (replaceCode === true) {
     const updatedCode = await chatCompletion(
-      "Apply this improvments to the code and return the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contains the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code."
+      `Apply this improvments to the code and return the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contains the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code. Improvments : ${summary}`
     );
     const formattedCode = clearCodeOutput(updatedCode);
+    console.log(chalk.green(`formattedCode : ${formattedCode}`));
     if (formattedCode !== "" && replaceCode === true) {
       await writeFileContent(codeFilePath, formattedCode).catch((err) => {
         console.log("errorwriteFileContent", err);
