@@ -176,12 +176,26 @@ const prioritization_agent = async (taskId) => {
 };
 
 const execution_agent = async (objective, task, chromaCollection) => {
-  const context = context_agent(objective, 5, chromaCollection);
+  const context = await context_agent(objective, 5, chromaCollection);
+
+//   const randomString = () => Math.random().toString(36).substring(2, 8);
+//   const resultId = `result_${task.taskId}_${randomString()}`;
+
+//   const add = await chromaCollection.add(
+//     [resultId],
+//     undefined,
+//     [{ task: "find the job of anna", result: "anna is a writer" }],
+//     ["i can confirm that anna is a writer"]
+//   );
+//   console.log("collectionadd: ", add);
   const prompt = `
     You are an AI who performs one task based on the following objective: ${objective}\n.
     Take into account these previously completed tasks: ${context}\n.
     Your task: ${task}\nResponse:`;
+  console.log("prompt: ", prompt);
   const response = await openai_completion(prompt, undefined, 2000);
+  // rome-ignore lint/correctness/noUnreachable: <explanation>
+  console.log("response: ", response);
   return response;
 };
 
@@ -196,7 +210,11 @@ const context_agent = async (query, topResultsNum, chromaCollection) => {
     undefined,
     query
   );
-  return results.metadatas[0].map((item) => item.task);
+  console.log("results: ", results.metadatas[0]);
+  if (results.error) {
+    return [];
+  }
+  return results.metadatas[0].map((item) => `${item.task}: ${item.result}`);
 };
 
 function sleep(ms) {
@@ -239,7 +257,9 @@ function sleep(ms) {
 
       // Step 2: Enrich result and store in Chroma
       const enrichedResult = { data: result }; // this is where you should enrich the result if needed
-      const resultId = `result_${task.taskId}`;
+      const randomString = () => Math.random().toString(36).substring(2, 8);
+      const resultId = `result_${task.taskId}_${randomString()}`;
+      //   const resultId = `result_${task.taskId}`;
       const vector = enrichedResult.data; // extract the actual result from the dictionary
       const collectionLength = (await chromaCollection.get([resultId])).ids
         ?.length;

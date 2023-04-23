@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "agi": "node babyagi/babyagi.js",
     "ai-scripts": "node ai-scripts.mjs",
     "preparezz": "node --experimental-modules json_to_jsonl.mjs ",
     "test": "echo \"Error: no test specified\" && exit 1",
