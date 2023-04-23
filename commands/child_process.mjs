@@ -11,11 +11,13 @@ async function runCommand(command) {
     exec(command || "ls", (error, stdout, stderr) => {
       if (error) {
         console.error(`Error: ${error.message}`);
-        return;
+        reject(error.message);
+        // return;
       }
       if (stderr) {
         console.error(`Stderr: ${stderr}`);
-        return;
+        // return;
+        reject(stderr);
       }
       console.log(`Stdout: ${stdout}`);
       resolve(stdout);
