@@ -22,13 +22,13 @@ async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {
     `Analyze code for page ${path} with prompt ${prompt}`
   ).start();
 
-  const result = await analyzeCode(path, prompt, replaceCode).catch((err) => {
+  const { summary, analyze } = await analyzeCode(path, prompt, replaceCode).catch((err) => {
     spinner.stop();
     return;
   });
   spinner.stop();
-  console.log(chalk.green(`Analyze code for page : ${path} done.`));
-  console.log(result);
+  console.log(chalk.green(`Analyze code for page : ${path} done. `));
+
 }
 async function codeTaskCmd(prompt = "", replaceCode = false) {
   const spinner = ora(
