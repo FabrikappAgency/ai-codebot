@@ -33,8 +33,16 @@ Instructions on how to use this project:
 
 Launch perpetual bot
 ```
-node perpetual-cli.mjs
+yarn start
 ```
+
+You can chat or use commands. Here are some examples:
+
+- fixcode perpetual-cli.mjs add a log to display 
+- summary at the of analyzeCodeCmd
+- analyzecode commands/analyze-code.mjs
+- task generate image / create file
+- runcommand + command
 ## Contributing
 
 Instructions on how to contribute to this project:

@@ -82,6 +82,7 @@ async function chatCompletion(prompt, context = null, modelId = null) {
     .catch((err) => {
       console.error('Error keys:', Object.keys(err));
 
+      console.error('error', err.response);
       console.error('error', err.response.data.error);
       console.error('error', err.message);
     });
