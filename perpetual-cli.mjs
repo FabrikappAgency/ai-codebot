@@ -7,42 +7,45 @@ import inquirer from "inquirer";
 async function fetchData(query) {
   const spinner = ora("Fetching data...").start();
 
-  const result = await chatCompletion(query).catch((err) => {
-    console.log(chalk.red(`Error fetching data for query: ${query}`, err));
-
+  try {
+    const result = await chatCompletion(query);
     spinner.stop();
-    return;
-  });
-  spinner.stop();
-  console.log(chalk.green(`Fetched data for query: ${query}`));
-  console.log(result);
+    console.log(chalk.green(`Fetched data for query: ${query}`));
+    console.log(result);
+  } catch (err) {
+    console.log(chalk.red(`Error fetching data for query: ${query}`, err));
+    spinner.stop();
+  }
 }
+
 async function analyzeCodeCmd(path, prompt = "", replaceCode = false) {
   const spinner = ora(
     `Analyze code for page ${path} with prompt ${prompt}`
   ).start();
 
-  const { summary, analyze } = await analyzeCode(path, prompt, replaceCode).catch((err) => {
+  try {
+    const { summary, analyze } = await analyzeCode(path, prompt, replaceCode);
+    spinner.stop();
+    console.log(chalk.green(`Analyze code for page : ${path} done. `));
+  } catch (err) {
     console.log(chalk.red(`Error analyzing code for page : ${path}`, err));
     spinner.stop();
-    return;
-  });
-  spinner.stop();
-  console.log(chalk.green(`Analyze code for page : ${path} done. `));
-
+  }
 }
+
 async function codeTaskCmd(prompt = "", replaceCode = false) {
   const spinner = ora(
     `Code task with prompt ${prompt}`
   ).start();
 
-  const result = await codeTask(prompt).catch((err) => {
+  try {
+    const result = await codeTask(prompt);
     spinner.stop();
-    return;
-  });
-  spinner.stop();
-  console.log(chalk.green(`Code task for ${prompt} done.`));
-  console.log(result);
+    console.log(chalk.green(`Code task for ${prompt} done.`));
+    console.log(result);
+  } catch (err) {
+    spinner.stop();
+  }
 }
 
 async function askQuestion() {
@@ -61,6 +64,7 @@ async function askQuestion() {
     if (answer.toLowerCase() === "exit") {
       return;
     }
+
     if (answer.toLowerCase().startsWith("runcommand")) {
       const words = answer.split(" ");
       words.shift(); // remove the first word
