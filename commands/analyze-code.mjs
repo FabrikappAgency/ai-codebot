@@ -9,6 +9,7 @@ import {
   writeFileContent,
   clearCodeOutput,
 } from "../utils/utils.mjs";
+import { execution_agent, chromaConnect } from "../babyagi/babyagi.js";
 
 dotenv.config();
 
@@ -25,15 +26,17 @@ async function analyzeCode(
   const code = await getFileContent(codeFilePath);
 
   const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and find ways improve it. Your reply must contain the improvements but not the original code. Here is the code:${code}. `;
+  // const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and find ways improve it. Your reply must contain the improvements but not the original code. Here is the code:${code}. `;
 
-  const analyze = await chatCompletion(
-    "Return a summary of the changes you've made in bullet point with return char.".concat(
-      prompt
-        ? `You can update the code to implement only the following requirements:${prompt}`
-        : ""
-    ),
-    context
-  );
+  const analyze = await chatCompletion(prompt, context);
+  // const analyze = await chatCompletion(
+  //   "Return a summary of the changes you've made in bullet point with return char.".concat(
+  //     prompt
+  //       ? `You can update the code to implement only the following requirements:${prompt}`
+  //       : ""
+  //   ),
+  //   context
+  // );
   console.log(chalk.green(`${analyze}`));
 
   /*  This add summary of the changes you've made in bullet point with return char. */
@@ -55,8 +58,27 @@ async function analyzeCode(
     }
   }
 
+  await saveToChroma(prompt, analyze, path);
   const summary = "summary here";
   return { analyze, summary };
+}
+// analyzecode perpetual-cli.mjs send a details of this code
+async function saveToChroma(task, result, path) {
+  const randomString = () => Math.random().toString(36).substring(2, 8);
+  const resultId = `result_${randomString()}`;
+  const chromaCollection = await chromaConnect();
+
+  const enrichedResult = { data: result }; // this is where you should enrich the result if needed
+ 
+  const vector = enrichedResult.data; 
+
+  const add = await chromaCollection.add(
+    [resultId],
+    undefined,
+    [{ path: path, task: task, result: result }],
+    [vector]
+  );
+  console.log("collectionadd: ", add);
 }
 
 export { analyzeCode };

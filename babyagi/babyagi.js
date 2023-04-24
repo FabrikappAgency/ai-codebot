@@ -24,15 +24,15 @@ assert(TABLE_NAME, "TABLE_NAME environment variable is missing from .env");
 const BABY_NAME = process.env.BABY_NAME || "BabyAGI";
 
 // Goal config
-const p = prompt();
-const OBJECTIVE = p("What is BabyAGI's objective? ");
-const INITIAL_TASK = p("What is the initial task to complete the objective? ");
-assert(OBJECTIVE, "No objective provided.");
-assert(INITIAL_TASK, "No initial task provided.");
+// const p = prompt();
+// const OBJECTIVE = p("What is BabyAGI's objective? ");
+// const INITIAL_TASK = p("What is the initial task to complete the objective? ");
+// assert(OBJECTIVE, "No objective provided.");
+// assert(INITIAL_TASK, "No initial task provided.");
 
-console.log("\x1b[95m\x1b[1m\n*****CONFIGURATION*****\n\x1b[0m\x1b[0m");
-console.log(`Name: ${BABY_NAME}`);
-console.log(`LLM: ${OPENAI_API_MODEL}`);
+// console.log("\x1b[95m\x1b[1m\n*****CONFIGURATION*****\n\x1b[0m\x1b[0m");
+// console.log(`Name: ${BABY_NAME}`);
+// console.log(`LLM: ${OPENAI_API_MODEL}`);
 
 if (OPENAI_API_MODEL.toLowerCase().includes("gpt-4")) {
   console.log(
@@ -40,10 +40,10 @@ if (OPENAI_API_MODEL.toLowerCase().includes("gpt-4")) {
   );
 }
 
-console.log("\x1b[94m\x1b[1m" + "\n*****OBJECTIVE*****\n" + "\x1b[0m\x1b[0m");
-console.log(`${OBJECTIVE}`);
+// console.log("\x1b[94m\x1b[1m" + "\n*****OBJECTIVE*****\n" + "\x1b[0m\x1b[0m");
+// console.log(`${OBJECTIVE}`);
 
-console.log(`\x1b[93m\x1b[1m \nInitial task: \x1b[0m\x1b[0m ${INITIAL_TASK}`);
+// console.log(`\x1b[93m\x1b[1m \nInitial task: \x1b[0m\x1b[0m ${INITIAL_TASK}`);
 
 // Define OpenAI embedding function using Chroma
 const embeddingFunction = new OpenAIEmbeddingFunction(OPENAI_API_KEY);
@@ -178,16 +178,16 @@ const prioritization_agent = async (taskId) => {
 const execution_agent = async (objective, task, chromaCollection) => {
   const context = await context_agent(objective, 5, chromaCollection);
 
-//   const randomString = () => Math.random().toString(36).substring(2, 8);
-//   const resultId = `result_${task.taskId}_${randomString()}`;
+  //   const randomString = () => Math.random().toString(36).substring(2, 8);
+  //   const resultId = `result_${task.taskId}_${randomString()}`;
 
-//   const add = await chromaCollection.add(
-//     [resultId],
-//     undefined,
-//     [{ task: "find the job of anna", result: "anna is a writer" }],
-//     ["i can confirm that anna is a writer"]
-//   );
-//   console.log("collectionadd: ", add);
+  //   const add = await chromaCollection.add(
+  //     [resultId],
+  //     undefined,
+  //     [{ task: "find the job of anna", result: "anna is a writer" }],
+  //     ["i can confirm that anna is a writer"]
+  //   );
+  //   console.log("collectionadd: ", add);
   const prompt = `
     You are an AI who performs one task based on the following objective: ${objective}\n.
     Take into account these previously completed tasks: ${context}\n.
@@ -196,6 +196,8 @@ const execution_agent = async (objective, task, chromaCollection) => {
   const response = await openai_completion(prompt, undefined, 2000);
   // rome-ignore lint/correctness/noUnreachable: <explanation>
   console.log("response: ", response);
+
+  
   return response;
 };
 
@@ -221,12 +223,12 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-(async () => {
+async function start() {
   const initialTask = {
     taskId: 1,
     taskName: INITIAL_TASK,
   };
-  add_task(initialTask);
+//   add_task(initialTask);
   const chromaCollection = await chromaConnect();
   var taskIdCounter = 1;
   while (true) {
@@ -295,4 +297,7 @@ function sleep(ms) {
       await sleep(3000);
     }
   }
-})();
+}
+// ();
+
+export { chromaConnect, execution_agent };

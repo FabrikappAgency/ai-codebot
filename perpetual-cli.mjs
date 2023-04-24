@@ -3,6 +3,8 @@ import { chatCompletion, runCommand, analyzeCode, codeTask } from "./commands/in
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
+// import { execution_agent } from "./commands/execution_agent.mjs";
+import { execution_agent, chromaConnect } from "./babyagi/babyagi.js";
 
 async function fetchData(query) {
   const spinner = ora("Fetching data...").start();
@@ -14,6 +16,25 @@ async function fetchData(query) {
     console.log(result);
   } catch (err) {
     console.log(chalk.red(`Error fetching data for query: ${query}`, err));
+    spinner.stop();
+  }
+}
+async function startAgent(taskName) {
+  const spinner = ora("Fetching data...").start();
+  const objective = taskName
+  try {
+    const initialTask = {
+      taskId: 1,
+      taskName: taskName,
+    };
+    // add_task(initialTask);
+    const chromaCollection = await chromaConnect();
+    const result = await execution_agent(objective, initialTask.taskName, chromaCollection);
+    spinner.stop();
+    console.log(chalk.green(`Fetched data for query: ${objective} (${taskName}) : ${result}`));
+    console.log(result);
+  } catch (err) {
+    console.log(chalk.red(`Error fetching data for query: ${objective}`, err));
     spinner.stop();
   }
 }
@@ -73,6 +94,12 @@ async function askQuestion() {
       askQuestion();
     } else if (answer.toLowerCase().startsWith("code")) {
       await analyzeCodeCmd("commands/child_process.mjs");
+      askQuestion();
+    } else if (answer.toLowerCase().startsWith("agent")) {
+      const words = answer.split(" ");
+      words.shift(); // remove the first word
+      const prompt = words.join(" ");
+      await startAgent(prompt);
       askQuestion();
     } else if (answer.toLowerCase().startsWith("fixcode")) {
       const words = answer.split(" ");
