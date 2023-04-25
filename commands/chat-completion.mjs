@@ -16,7 +16,7 @@ async function clearMessages(dataFilePath) {
 }
 async function addMessage(newMessage) {
   const dataFilePath =
-    "/Users/jeremy/Documents/dev/FabrikappAgency/ai-scripts/data/data.json";
+    "./data/data.json";
   //   const newMessage = "Hello, world!";
 
   // Read the existing data from the file

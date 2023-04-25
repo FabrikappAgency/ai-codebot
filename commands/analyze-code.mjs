@@ -39,7 +39,7 @@ async function analyzeCode(
   console.log(chalk.green(`${context}`));
 
   // let analyze = "analyze here";
-  const fixcodePrompt = "Apply improvements that seems necessary to the code and return only the improved code. You can ask ChatGPT to output code within a code block by enclosing the code within triple backticks (```) like this: ```console.log('Hello World!');```";
+  const fixcodePrompt = "Apply improvements that seems necessary to the code and return only the improved code. You must output the updated code within a code block by enclosing the code within triple backticks (```) like this: ```console.log('Hello World!');```";
   // Your code goes here
   const analyzePrompt =
     "Return a bullet point list of the improvments that can be applied. Separate each line with return char.";
