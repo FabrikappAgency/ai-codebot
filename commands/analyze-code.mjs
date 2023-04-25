@@ -25,19 +25,8 @@ async function analyzeCode(
 
   const code = await getFileContent(codeFilePath);
 
-  const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and find ways improve it. Your reply must contain the improvements but not the original code. Here is the code:${code}. `;
-  // const context = `You are the best software developer. You are a specialist. But you can only write code. Analyze this code and find ways improve it. Your reply must contain the improvements but not the original code. Here is the code:${code}. `;
-
-  const analyze = await chatCompletion(prompt, context);
-  // const analyze = await chatCompletion(
-  //   "Return a summary of the changes you've made in bullet point with return char.".concat(
-  //     prompt
-  //       ? `You can update the code to implement only the following requirements:${prompt}`
-  //       : ""
-  //   ),
-  //   context
-  // );
-  console.log(chalk.green(`${analyze}`));
+  const contextAnalyze = "You are the best software developer. You are a specialist. But you can only write code. Analyze this code and find ways improve it. Your reply must contain the improvements but not the original code.";
+  const contextFixcode = "You are the best software developer. You are a specialist in nodejs an javascript/typescript. Your reply must contain only the modified and improved code.  ";
 
   /*  This add summary of the changes you've made in bullet point with return char. */
   /*
@@ -46,20 +35,36 @@ async function analyzeCode(
   );
   console.log(chalk.green(`${summary}`)); 
   */
+  const context = replaceCode === true ? contextFixcode : contextAnalyze;
+  console.log(chalk.green(`${context}`));
+
+  // let analyze = "analyze here";
+  const fixcodePrompt = "Apply improvements that seems necessary to the code and return only the improved code. You can ask ChatGPT to output code within a code block by enclosing the code within triple backticks (```) like this: ```console.log('Hello World!');```";
+  // Your code goes here
+  const analyzePrompt =
+    "Return a bullet point list of the improvments that can be applied. Separate each line with return char.";
+
+  let summary = replaceCode === true ? fixcodePrompt : analyzePrompt;
+
+  summary = summary.concat(
+    prompt
+      ? `You can update the code to implement only the following requirements: ${prompt}.`
+      : ""
+  ).concat(`Here is the code to update: ${code}`);
+
+  const analyze = await chatCompletion(summary, context);
   if (replaceCode === true) {
-    const updatedCode = await chatCompletion(
-      `Apply this improvements to the code and return only the improved code. You don't need to use enclosing quote or code template, just raw code. Your reply must contain the code and nothing else. Please do not add any mdx style annotation, just raw unformatted code.`
-    );
-    const formattedCode = clearCodeOutput(updatedCode);
-    if (formattedCode !== "" && replaceCode === true) {
+    const formattedCode = clearCodeOutput(analyze);
+    console.log(chalk.green(`Formatted : ${formattedCode}`));
+    if (formattedCode !== "") {
       await writeFileContent(codeFilePath, formattedCode).catch((err) => {
         console.log("errorwriteFileContent", err);
       });
     }
-  }
+  } 
+  console.log(chalk.green(`Summary : ${summary}`));
+  console.log(chalk.green(`Analyze : ${analyze}`));
 
-  await saveToChroma(prompt, analyze, path);
-  const summary = "summary here";
   return { analyze, summary };
 }
 // analyzecode perpetual-cli.mjs send a details of this code
@@ -69,8 +74,8 @@ async function saveToChroma(task, result, path) {
   const chromaCollection = await chromaConnect();
 
   const enrichedResult = { data: result }; // this is where you should enrich the result if needed
- 
-  const vector = enrichedResult.data; 
+
+  const vector = enrichedResult.data;
 
   const add = await chromaCollection.add(
     [resultId],
