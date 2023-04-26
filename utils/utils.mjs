@@ -33,7 +33,28 @@ async function getFileContent(path) {
     throw err;
   }
 }
+/**
+ * Extracts code blocks from a string.
+ * @param {string} code - The string to extract code blocks from.
+ * @returns {string[]} - An array of code blocks.
+ * @throws Will throw an error if the regular expression fails to match.
+ */
+function extractCodeBlocks(code) {
+  try {
+    const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/g;
 
+    let result = [];
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+      const content = match.groups.content;
+      result.push(content);
+    }
+    return result;
+  } catch (err) {
+    console.error("An error occurred while extracting the code blocks:", err);
+    throw err;
+  }
+}
 /**
  * Removes code output from a string.
  * @param {string} code - The string to remove code output from.
@@ -57,4 +78,4 @@ function clearCodeOutput(code) {
   }
 }
 
-export { clearCodeOutput, getFileContent, writeFileContent };
+export { clearCodeOutput, getFileContent, writeFileContent, extractCodeBlocks };
