@@ -42,10 +42,12 @@ async function getFileContent(path) {
 function extractCodeBlocks(code) {
   try {
     const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/g;
-
+    // const regex = /```(?<word>\w+)?\n([^`]|`[^`]|``[^`])*```/g;
+    const matches = code.match(regex);
     let result = [];
     let match;
     while ((match = regex.exec(code)) !== null) {
+      // console.log('match', match);
       const content = match.groups.content;
       result.push(content);
     }

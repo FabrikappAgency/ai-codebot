@@ -23,11 +23,11 @@ async function clearData() {
 async function analyzeSummary(summary) {
   try {
     const json = JSON.parse(summary);
-    if (json.hasOwnProperty("command")) {
-      console.log(chalk.green("Valid JSON with 'command' key detected"));
-      return true;
+    if (json.hasOwnProperty("result") && json.hasOwnProperty("commands")) {
+      console.log(chalk.green("Valid JSON with 'commands' key detected"));
+      return json;
     } else {
-      console.log(chalk.red("JSON does not have 'command' key"));
+      console.log(chalk.red("JSON does not have 'commands' key"));
       return false;
     }
   } catch (err) {
@@ -56,4 +56,4 @@ async function codeTask(
   }
 }
 
-export { codeTask };
+export { codeTask, analyzeSummary };

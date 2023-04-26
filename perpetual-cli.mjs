@@ -1,5 +1,5 @@
 import { promptModel } from "./modelCommands.mjs";
-import { chatCompletion, runCommand, analyzeCode, codeTask } from "./commands/index.mjs";
+import { chatCompletion, runCommand, analyzeCode, codeTask, cliTask } from "./commands/index.mjs";
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
@@ -28,8 +28,7 @@ async function startAgent(taskName) {
       taskName: taskName,
     };
     // add_task(initialTask);
-    const chromaCollection = await chromaConnect();
-    const result = await execution_agent(objective, initialTask.taskName, chromaCollection);
+    const result = await cliTask(objective, initialTask.taskName);
     spinner.stop();
     console.log(chalk.green(`Fetched data for query: ${objective} (${taskName}) : ${result}`));
     console.log(result);

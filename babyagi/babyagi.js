@@ -3,6 +3,7 @@ import { ChromaClient, OpenAIEmbeddingFunction } from "chromadb";
 import prompt from "prompt-sync";
 import assert from "assert";
 import * as dotenv from "dotenv";
+import { analyzeSummary } from "../commands/index.mjs";
 dotenv.config();
 
 // const client = new ChromaClient("http://localhost:8000")
@@ -98,7 +99,7 @@ const get_ada_embedding = async (text) => {
 
 const openai_completion = async (
   prompt,
-  temperature = 0.5,
+  temperature = 0.2,
   maxTokens = 100
 ) => {
   if (OPENAI_API_MODEL.startsWith("gpt-")) {
@@ -191,13 +192,27 @@ const execution_agent = async (objective, task, chromaCollection) => {
   const prompt = `
     You are an AI who performs one task based on the following objective: ${objective}\n.
     Take into account these previously completed tasks: ${context}\n.
+    For every reply, generate a json response with props task and result and command\n.
+    task prop is a summary of the task, result prop is a multiple sentence argumenting your reply, and commands prop is an array of the commands or command to use.\n.
     Your task: ${task}\nResponse:`;
   console.log("prompt: ", prompt);
   const response = await openai_completion(prompt, undefined, 2000);
+  const validSumary = await analyzeSummary(response);
+  if (validSumary) {
+    const resultId = `result_${randomString()}`;
+
+    const add = await chromaCollection.add(
+      [resultId],
+      undefined,
+      [validSumary],
+      [validSumary.command]
+    );
+    console.log("collectionadd: ", add);
+  }
+  
   // rome-ignore lint/correctness/noUnreachable: <explanation>
   console.log("response: ", response);
 
-  
   return response;
 };
 
@@ -222,13 +237,14 @@ const context_agent = async (query, topResultsNum, chromaCollection) => {
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+const randomString = () => Math.random().toString(36).substring(2, 8);
 
 async function start() {
   const initialTask = {
     taskId: 1,
     taskName: INITIAL_TASK,
   };
-//   add_task(initialTask);
+  //   add_task(initialTask);
   const chromaCollection = await chromaConnect();
   var taskIdCounter = 1;
   while (true) {
@@ -259,7 +275,6 @@ async function start() {
 
       // Step 2: Enrich result and store in Chroma
       const enrichedResult = { data: result }; // this is where you should enrich the result if needed
-      const randomString = () => Math.random().toString(36).substring(2, 8);
       const resultId = `result_${task.taskId}_${randomString()}`;
       //   const resultId = `result_${task.taskId}`;
       const vector = enrichedResult.data; // extract the actual result from the dictionary
