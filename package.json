@@ -6,6 +6,7 @@
   "scripts": {
     "agi": "node babyagi/babyagi.js",
     "ai-scripts": "node ai-scripts.mjs",
+    "tsc:browser": "tsc tasks/browser.ts --outDir tasks",
     "preparezz": "node --experimental-modules json_to_jsonl.mjs ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "throw-error": "node throw-error.mjs",
@@ -16,19 +17,22 @@
   "license": "ISC",
   "dependencies": {
     "@tectalic/openai": "^0.3.1",
-    "axios": "^1.3.4",
+    "axios": "^1.3.6",
     "chalk": "^5.2.0",
+    "cheerio": "^1.0.0-rc.12",
     "chromadb": "^1.4.1",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "form-data": "^4.0.0",
     "inquirer": "^9.1.5",
     "JSONStream": "^1.3.5",
+    "langchain": "^0.0.64",
     "openai": "^3.2.1",
     "ora": "^6.3.0",
     "prompt-sync": "^4.2.0",
     "readline": "^1.3.0",
-    "yargs": "^17.7.1"
+    "yargs": "^17.7.1",
+    "zod": "^3.21.4"
   },
   "type": "module",
   "devDependencies": {

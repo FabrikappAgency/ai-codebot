@@ -1,5 +1,5 @@
 import { promptModel } from "./modelCommands.mjs";
-import { chatCompletion, runCommand, analyzeCode, codeTask, cliTask } from "./commands/index.mjs";
+import { chatCompletion, runCommand, analyzeCode, codeTask, cliTask, llmCompletion, chatLLMCompletion} from "./commands/index.mjs";
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";

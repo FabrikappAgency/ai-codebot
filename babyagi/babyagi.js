@@ -196,16 +196,18 @@ const execution_agent = async (objective, task, chromaCollection) => {
     task prop is a summary of the task, result prop is a multiple sentence argumenting your reply, and commands prop is an array of the commands or command to use.\n.
     Your task: ${task}\nResponse:`;
   console.log("prompt: ", prompt);
-  const response = await openai_completion(prompt, undefined, 2000);
-  const validSumary = await analyzeSummary(response);
-  if (validSumary) {
+  const response = await openai_completion(prompt, undefined, 2000).catch(err=>console.log(err));
+  console.log("response: ", response);
+  const validSummary = await analyzeSummary(response);
+  console.log("validSumary: ", validSummary);
+  if (validSummary) {
     const resultId = `result_${randomString()}`;
 
     const add = await chromaCollection.add(
       [resultId],
       undefined,
-      [validSumary],
-      [validSumary.command]
+      [validSummary],
+      [validSummary.result]
     );
     console.log("collectionadd: ", add);
   }
