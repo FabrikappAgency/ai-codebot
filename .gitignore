@@ -1,7 +1,37 @@
-node_modules
-npm-debug.log
 yarn-error.log
-data/*
-models/*
+data/generated/*
+data/memory/*
+data/models/*
 generated/*
+chroma/*
 .env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Coverage
+coverage
+
+# Transpiled files
+build/
+
+# VS Code
+.vscode
+!.vscode/tasks.js
+
+# JetBrains IDEs
+.idea/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Misc
+.DS_Store

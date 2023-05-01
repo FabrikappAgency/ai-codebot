@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 /**
  * Writes data to a file asynchronously.
@@ -7,13 +7,13 @@ import fs from "fs";
  * @returns {Promise<boolean>} - A promise that resolves to true if the write was successful.
  * @throws Will throw an error if the write operation fails.
  */
-async function writeFileContent(path, data) {
+async function writeFileContent(path: string, data: string): Promise<boolean> {
   try {
-    await fs.promises.writeFile(path, data, { encoding: "utf8" });
-    console.log("The file was saved!");
+    await fs.promises.writeFile(path, data, { encoding: 'utf8' });
+    console.log('The file was saved!');
     return true;
   } catch (err) {
-    console.error("An error occurred while writing the file:", err);
+    console.error('An error occurred while writing the file:', err);
     throw err;
   }
 }
@@ -26,10 +26,10 @@ async function writeFileContent(path, data) {
  */
 async function getFileContent(path) {
   try {
-    const data = await fs.promises.readFile(path, "utf8");
+    const data = await fs.promises.readFile(path, 'utf8');
     return data;
   } catch (err) {
-    console.error("An error occurred while reading the file:", err);
+    console.error('An error occurred while reading the file:', err);
     throw err;
   }
 }
@@ -44,7 +44,7 @@ function extractCodeBlocks(code) {
     const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/g;
     // const regex = /```(?<word>\w+)?\n([^`]|`[^`]|``[^`])*```/g;
     const matches = code.match(regex);
-    let result = [];
+    const result = [];
     let match;
     while ((match = regex.exec(code)) !== null) {
       // console.log('match', match);
@@ -53,7 +53,7 @@ function extractCodeBlocks(code) {
     }
     return result;
   } catch (err) {
-    console.error("An error occurred while extracting the code blocks:", err);
+    console.error('An error occurred while extracting the code blocks:', err);
     throw err;
   }
 }
@@ -67,7 +67,7 @@ function clearCodeOutput(code) {
   try {
     const regex = /```(?<word>\w+)?\n(?<content>[\s\S]*?)\n```/g;
 
-    let result = "";
+    let result = '';
     let match;
     while ((match = regex.exec(code)) !== null) {
       const content = match.groups.content;
@@ -75,7 +75,7 @@ function clearCodeOutput(code) {
     }
     return result;
   } catch (err) {
-    console.error("An error occurred while clearing the code output:", err);
+    console.error('An error occurred while clearing the code output:', err);
     throw err;
   }
 }
