@@ -21,7 +21,7 @@ async function chatCompletionCommand(): Promise<void> {
   }
   try {
     s.start('Fetching data...');
-    const result = await llmCompletion(query);
+    const result = await chatCompletion(query);
     s.stop('Chat completion done');
     console.log(chalk.green(`Fetched data for query: ${query}`));
     console.log(result);

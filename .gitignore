@@ -2,6 +2,7 @@ yarn-error.log
 data/generated/*
 data/memory/*
 data/models/*
+data/store/*
 generated/*
 chroma/*
 .env

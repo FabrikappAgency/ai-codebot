@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface Config {
+  serpApiKey: string;
+  chromaClientUrl: string;
+  chromaTableName: string;
   openaiApiKey: string;
   openaiApiModel: string;
   tableName: string;
@@ -20,6 +23,9 @@ const AppConfig: Config = {
   contextRootPath: process.env.CONTEXT_ROOT_PATH || '',
   dataRootPath: process.env.DATA_ROOT_PATH || '',
   projectRootPath: process.env.PROJECT_ROOT_PATH || '',
+  serpApiKey: process.env.SERPAPI_API_KEY || '',
+  chromaTableName: process.env.CHROMA_TABLE_NAME || '',
+  chromaClientUrl: process.env.CHROMA_CLIENT_URL || 'http://localhost:8000',
 };
 
 export default AppConfig;
