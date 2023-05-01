@@ -1,11 +1,9 @@
+import { Delays } from "../enum/enum.js";
+
 /**
  * Some predefined delay values (in milliseconds).
  */
-export enum Delays {
-  Short = 500,
-  Medium = 2000,
-  Long = 5000,
-}
+
 
 export async function greeter(name: string): Promise<string> {
   // eslint-disable-line @typescript-eslint/no-explicit-any

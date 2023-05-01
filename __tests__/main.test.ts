@@ -1,4 +1,5 @@
-import { Delays, greeter } from '../src/main.js';
+import { greeter } from "../src/commands/index.js";
+import { Delays } from "../src/enum/enum.js";
 
 describe('greeter function', () => {
   const name = 'John';
